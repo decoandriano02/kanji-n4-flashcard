@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanji Flashcard N4</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>日本語 Kanji Study</h1>
+        <p>My Personal Kanji Flashcard</p>
+    </header>
+
+    <main class="container">
+
+        <section class="dashboard">
+            <h2>JLPT N4</h2>
+            <p>Belajar Kanji setiap hari!</p>
+            <div id="progress">0 / 0 Kanji dikuasai</div>
+        </section>
+
+        <section class="flashcard-section">
+
+            <div class="card" id="flashcard">
+                <div class="card-content" id="cardContent">
+                    <p class="label">KANJI</p>
+                    <h1 id="kanji">駅</h1>
+                    <p>Klik kartu untuk melihat arti</p>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button id="prevBtn">← Previous</button>
+                <button id="flipBtn">Lihat Arti</button>
+                <button id="nextBtn">Next →</button>
+            </div>
+
+        </section>
+
+        
+<section class="add-section">
+    <h2>Tambah Kanji Baru</h2>
+
+    <input
+        type="text"
+        id="newKanji"
+        placeholder="Kanji (contoh: 毎)"
+    >
+
+    <input
+        type="text"
+        id="newReading"
+        placeholder="Cara baca (contoh: まい)"
+    >
+
+    <input
+        type="text"
+        id="newMeaning"
+        placeholder="Arti (contoh: Setiap)"
+    >
+
+    <textarea
+        id="newExamples"
+        placeholder="Kosakata pasangan (satu per baris):
+毎朝 | まいあさ | Setiap pagi
+毎日 | まいにち | Setiap hari"
+        rows="5"
+    ></textarea>
+
+    <button id="addBtn">+ Tambah Kanji</button>
+</section>
+
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
