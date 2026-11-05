@@ -1,7 +1,6 @@
-
 // ==========================================
 // KANJI FLASHCARD JLPT N4
-// Paket 1 dan 2
+// QUIZ MODE + RANDOM KANJI + RANDOM ANSWERS
 // ==========================================
 
 const defaultCards = [
@@ -28,10 +27,7 @@ const defaultCards = [
         ]
     },
 
-    // ==========================================
     // FILE 1 - KANJI TEMPAT
-    // ==========================================
-
     {
         kanji: "住",
         reading: "すむ",
@@ -135,10 +131,7 @@ const defaultCards = [
         ]
     },
 
-    // ==========================================
     // FILE 2 - KANJI SIFAT DAN KONDISI
-    // ==========================================
-
     {
         kanji: "明",
         reading: "あかるい",
@@ -249,6 +242,22 @@ const defaultCards = [
 ];
 
 // ==========================================
+// FUNGSI ACAK ARRAY
+// ==========================================
+
+function shuffleArray(array) {
+    const shuffled = [...array];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    return shuffled;
+}
+
+// ==========================================
 // GABUNGKAN DATA LAMA DAN BARU
 // ==========================================
 
@@ -257,7 +266,10 @@ function loadCards() {
 
     try {
         savedCards = JSON.parse(localStorage.getItem("kanjiCards")) || [];
-        if (!Array.isArray(savedCards)) savedCards = [];
+
+        if (!Array.isArray(savedCards)) {
+            savedCards = [];
+        }
     } catch (error) {
         savedCards = [];
     }
@@ -292,9 +304,19 @@ function loadCards() {
     return Array.from(merged.values());
 }
 
-let cards = loadCards();
+// ==========================================
+// DATA DAN STATUS QUIZ
+// ==========================================
+
+let cards = shuffleArray(loadCards());
+
 let currentIndex = 0;
 let isFlipped = false;
+let hasAnswered = false;
+let correctAnswer = "";
+
+let correctCount = 0;
+let wrongCount = 0;
 
 // ==========================================
 // HUBUNGKAN HTML
@@ -302,10 +324,18 @@ let isFlipped = false;
 
 const flashcard = document.getElementById("flashcard");
 const cardContent = document.getElementById("cardContent");
+
 const flipBtn = document.getElementById("flipBtn");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
 const addBtn = document.getElementById("addBtn");
+
+const quizOptions = document.getElementById("quizOptions");
+const quizFeedback = document.getElementById("quizFeedback");
+
+// ==========================================
+// FUNGSI AMAN UNTUK MENAMPILKAN TEKS
+// ==========================================
 
 function escapeHTML(value) {
     return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -317,8 +347,136 @@ function escapeHTML(value) {
     })[char]);
 }
 
+// ==========================================
+// SIMPAN DATA KANJI
+// ==========================================
+
 function saveCards() {
     localStorage.setItem("kanjiCards", JSON.stringify(cards));
+}
+
+// ==========================================
+// AMBIL CARA BACA KANJI
+// ==========================================
+
+function getQuizReading(card) {
+    return String(card.reading || "")
+        .split(/[・/、]/)[0]
+        .trim();
+}
+
+// ==========================================
+// BUAT PILIHAN JAWABAN ACAK
+// ==========================================
+
+function createQuiz() {
+    const card = cards[currentIndex];
+
+    correctAnswer = getQuizReading(card);
+
+    // Ambil cara baca dari Kanji lainnya
+    const otherReadings = cards
+        .filter(item => item.kanji !== card.kanji)
+        .map(item => getQuizReading(item))
+        .filter(reading => reading && reading !== correctAnswer);
+
+    // Hilangkan pilihan yang sama
+    const uniqueReadings = [...new Set(otherReadings)];
+
+    // Acak pilihan salah
+    const shuffledWrongAnswers = shuffleArray(uniqueReadings);
+
+    // Ambil tiga pilihan salah
+    const wrongAnswers = shuffledWrongAnswers.slice(0, 3);
+
+    // Gabungkan jawaban benar dan salah
+    let choices = [correctAnswer, ...wrongAnswers];
+
+    // Acak posisi seluruh pilihan
+    choices = shuffleArray(choices);
+
+    // Tampilkan pilihan
+    quizOptions.innerHTML = choices.map(choice => `
+        <button class="quiz-option" data-answer="${escapeHTML(choice)}">
+            ${escapeHTML(choice)}
+        </button>
+    `).join("");
+
+    // Aktifkan tombol pilihan
+    quizOptions.querySelectorAll(".quiz-option").forEach(button => {
+        button.addEventListener("click", () => {
+            checkAnswer(button.dataset.answer);
+        });
+    });
+
+    quizFeedback.textContent = "";
+    quizFeedback.className = "";
+
+    hasAnswered = false;
+    isFlipped = false;
+
+    flipBtn.disabled = true;
+    flipBtn.textContent = "Lihat Arti";
+}
+
+// ==========================================
+// PERIKSA JAWABAN
+// ==========================================
+
+function checkAnswer(answer) {
+    if (hasAnswered) return;
+
+    hasAnswered = true;
+
+    const isCorrect = answer === correctAnswer;
+
+    const buttons = quizOptions.querySelectorAll(".quiz-option");
+
+    buttons.forEach(button => {
+        button.disabled = true;
+
+        // Tunjukkan jawaban yang benar
+        if (button.dataset.answer === correctAnswer) {
+            button.classList.add("correct");
+        }
+
+        // Tandai jawaban yang salah dipilih
+        if (
+            button.dataset.answer === answer &&
+            !isCorrect
+        ) {
+            button.classList.add("wrong");
+        }
+    });
+
+    if (isCorrect) {
+        correctCount++;
+
+        quizFeedback.textContent = "Benar! すごい！ 🎉";
+        quizFeedback.className = "correct-text";
+
+    } else {
+        wrongCount++;
+
+        quizFeedback.textContent =
+            `Belum tepat. Jawaban yang benar adalah ${correctAnswer}`;
+
+        quizFeedback.className = "wrong-text";
+    }
+
+    flipBtn.disabled = false;
+    flipBtn.textContent = "Lihat Arti";
+
+    updateScore();
+}
+
+// ==========================================
+// UPDATE SKOR
+// ==========================================
+
+function updateScore() {
+    document.getElementById("score").textContent =
+        `Benar: ${correctCount} | Salah: ${wrongCount}`;
 }
 
 // ==========================================
@@ -328,13 +486,20 @@ function saveCards() {
 function showCard() {
     if (!cards.length) {
         cardContent.innerHTML = "<h2>Belum ada Kanji</h2>";
+
+        quizOptions.innerHTML = "";
+
         document.getElementById("progress").textContent = "0 Kanji";
+
+        flipBtn.disabled = true;
+
         return;
     }
 
     const card = cards[currentIndex];
 
     if (isFlipped) {
+
         const examples = (card.examples || []).map(item => `
             <div style="text-align:left; margin:12px 0;">
                 <strong>${escapeHTML(item.word)}</strong>
@@ -346,20 +511,28 @@ function showCard() {
 
         cardContent.innerHTML = `
             <p class="label">CARA BACA, ARTI DAN KOSAKATA</p>
+
             <h2>${escapeHTML(card.reading || "-")}</h2>
+
             <h3>${escapeHTML(card.meaning || "-")}</h3>
+
             <hr style="margin:15px 0;">
+
             <h3>Contoh kosakata</h3>
+
             ${examples || "<p>Belum ada kosakata tambahan.</p>"}
         `;
 
         flipBtn.textContent = "Lihat Kanji";
 
     } else {
+
         cardContent.innerHTML = `
             <p class="label">KANJI</p>
+
             <h1 id="kanji">${escapeHTML(card.kanji)}</h1>
-            <p>Klik kartu untuk melihat arti</p>
+
+            <p>Jawab kuis terlebih dahulu</p>
         `;
 
         flipBtn.textContent = "Lihat Arti";
@@ -374,44 +547,53 @@ function showCard() {
 // ==========================================
 
 function flipCard() {
-    if (!cards.length) return;
+    if (!cards.length || !hasAnswered) return;
 
     isFlipped = !isFlipped;
+
     showCard();
 }
 
 flashcard.addEventListener("click", flipCard);
+
 flipBtn.addEventListener("click", flipCard);
 
 // ==========================================
-// TOMBOL SEBELUMNYA DAN SELANJUTNYA
+// PINDAH KANJI
 // ==========================================
 
-prevBtn.addEventListener("click", () => {
+function changeCard(direction) {
     if (!cards.length) return;
 
-    currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+    currentIndex =
+        (currentIndex + direction + cards.length) % cards.length;
+
     isFlipped = false;
+
     showCard();
+    createQuiz();
+}
+
+prevBtn.addEventListener("click", () => {
+    changeCard(-1);
 });
 
 nextBtn.addEventListener("click", () => {
-    if (!cards.length) return;
-
-    currentIndex = (currentIndex + 1) % cards.length;
-    isFlipped = false;
-    showCard();
+    changeCard(1);
 });
 
 // ==========================================
-// TAMBAH KANJI BARU
+// TAMBAH ATAU UPDATE KANJI
 // ==========================================
 
 addBtn.addEventListener("click", () => {
 
     const kanji = document.getElementById("newKanji").value.trim();
+
     const reading = document.getElementById("newReading").value.trim();
+
     const meaning = document.getElementById("newMeaning").value.trim();
+
     const rawExamples = document.getElementById("newExamples").value.trim();
 
     if (!kanji || !reading || !meaning) {
@@ -423,6 +605,7 @@ addBtn.addEventListener("click", () => {
         .split("\n")
         .filter(line => line.trim())
         .map(line => {
+
             const parts = line.split("|").map(x => x.trim());
 
             return {
@@ -432,7 +615,9 @@ addBtn.addEventListener("click", () => {
             };
         });
 
-    const existingIndex = cards.findIndex(card => card.kanji === kanji);
+    const existingIndex = cards.findIndex(
+        card => card.kanji === kanji
+    );
 
     const newCard = {
         kanji,
@@ -442,30 +627,44 @@ addBtn.addEventListener("click", () => {
     };
 
     if (existingIndex >= 0) {
+
         cards[existingIndex] = newCard;
+
         currentIndex = existingIndex;
+
         alert("Kanji berhasil diperbarui!");
+
     } else {
+
         cards.push(newCard);
+
         currentIndex = cards.length - 1;
+
         alert("Kanji berhasil ditambahkan!");
     }
 
     saveCards();
 
-    isFlipped = false;
-
+    // Kosongkan form
     ["newKanji", "newReading", "newMeaning", "newExamples"]
         .forEach(id => {
             document.getElementById(id).value = "";
         });
 
+    isFlipped = false;
+
     showCard();
+    createQuiz();
 });
 
 // ==========================================
-// SIMPAN DAN MULAI
+// MULAI WEBSITE
 // ==========================================
 
 saveCards();
+
 showCard();
+
+createQuiz();
+
+updateScore();
