@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kanji Flashcard N4</title>
+    <title>Kanji Quiz N4</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header>
         <h1>日本語 Kanji Study</h1>
-        <p>My Personal Kanji Flashcard</p>
+        <p>My Personal Kanji Quiz</p>
     </header>
 
     <main class="container">
@@ -19,7 +18,8 @@
         <section class="dashboard">
             <h2>JLPT N4</h2>
             <p>Belajar Kanji setiap hari!</p>
-            <div id="progress">0 / 0 Kanji dikuasai</div>
+            <div id="progress">1 / 22 Kanji</div>
+            <div id="score">Benar: 0 | Salah: 0</div>
         </section>
 
         <section class="flashcard-section">
@@ -28,51 +28,41 @@
                 <div class="card-content" id="cardContent">
                     <p class="label">KANJI</p>
                     <h1 id="kanji">駅</h1>
-                    <p>Klik kartu untuk melihat arti</p>
+                    <p>Jawab kuis terlebih dahulu</p>
                 </div>
             </div>
 
+            <section class="quiz-section">
+                <h2>Bagaimana cara membaca Kanji ini?</h2>
+                <div id="quizOptions" class="quiz-options"></div>
+                <p id="quizFeedback"></p>
+            </section>
+
             <div class="buttons">
                 <button id="prevBtn">← Previous</button>
-                <button id="flipBtn">Lihat Arti</button>
+                <button id="flipBtn" disabled>Lihat Arti</button>
                 <button id="nextBtn">Next →</button>
             </div>
 
         </section>
 
-        
-<section class="add-section">
-    <h2>Tambah Kanji Baru</h2>
+        <section class="add-section">
+            <h2>Tambah Kanji Baru</h2>
 
-    <input
-        type="text"
-        id="newKanji"
-        placeholder="Kanji (contoh: 毎)"
-    >
+            <input type="text" id="newKanji" placeholder="Kanji (contoh: 毎)">
+            <input type="text" id="newReading" placeholder="Cara baca (contoh: まい)">
+            <input type="text" id="newMeaning" placeholder="Arti (contoh: Setiap)">
 
-    <input
-        type="text"
-        id="newReading"
-        placeholder="Cara baca (contoh: まい)"
-    >
-
-    <input
-        type="text"
-        id="newMeaning"
-        placeholder="Arti (contoh: Setiap)"
-    >
-
-    <textarea
-        id="newExamples"
-        placeholder="Kosakata pasangan (satu per baris):
+            <textarea
+                id="newExamples"
+                placeholder="Kosakata pasangan (satu per baris):
 毎朝 | まいあさ | Setiap pagi
 毎日 | まいにち | Setiap hari"
-        rows="5"
-    ></textarea>
+                rows="5"
+            ></textarea>
 
-    <button id="addBtn">+ Tambah Kanji</button>
-</section>
-
+            <button id="addBtn">+ Tambah Kanji</button>
+        </section>
 
     </main>
 
