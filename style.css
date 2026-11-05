@@ -161,3 +161,105 @@ input {
         font-size: 12px;
     }
 }
+/* QUIZ SECTION */
+.quiz-section {
+    margin: 25px auto;
+    text-align: center;
+    max-width: 500px;
+}
+
+.quiz-section h2 {
+    font-size: 18px;
+    margin-bottom: 18px;
+}
+
+.quiz-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.quiz-option {
+    padding: 15px;
+    font-size: 22px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.quiz-option:hover:not(:disabled) {
+    border-color: #4b78d1;
+    background: #eef3ff;
+}
+
+.quiz-option:disabled {
+    cursor: default;
+    opacity: 1;
+}
+
+.quiz-option.correct {
+    background: #d8f5df;
+    border-color: #28a745;
+    color: #176b2c;
+}
+
+.quiz-option.wrong {
+    background: #ffe0e0;
+    border-color: #dc3545;
+    color: #a51f2b;
+}
+
+.correct-text {
+    color: #218838;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.wrong-text {
+    color: #dc3545;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+#flipBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#score {
+    margin-top: 10px;
+    font-weight: bold;
+}
+/* PERBAIKAN TULISAN PILIHAN KUIS */
+.quiz-options .quiz-option {
+    color: #193047 !important;
+    background-color: #ffffff !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    font-family: sans-serif;
+    min-height: 75px;
+    border: 2px solid #d5dce5;
+    opacity: 1 !important;
+}
+
+/* Efek saat mouse diarahkan */
+.quiz-options .quiz-option:hover:not(:disabled) {
+    color: #193047 !important;
+    background-color: #edf4ff !important;
+}
+
+/* Jawaban benar */
+.quiz-options .quiz-option.correct {
+    color: #176b2c !important;
+    background-color: #d8f5df !important;
+    border-color: #28a745 !important;
+}
+
+/* Jawaban salah */
+.quiz-options .quiz-option.wrong {
+    color: #a51f2b !important;
+    background-color: #ffe0e0 !important;
+    border-color: #dc3545 !important;
+}
