@@ -263,3 +263,116 @@ input {
     background-color: #ffe0e0 !important;
     border-color: #dc3545 !important;
 }
+/* =====================================
+   COMPACT MODE - LAPTOP
+===================================== */
+
+/* Kurangi jarak antarbagian */
+body {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+header {
+    margin-bottom: 8px !important;
+    padding: 8px !important;
+}
+
+/* Kotak flashcard */
+#flashcard {
+    max-width: 520px !important;
+    min-height: 180px !important;
+    padding: 12px !important;
+    margin: 8px auto !important;
+}
+
+/* Isi flashcard */
+#cardContent {
+    padding: 8px !important;
+}
+
+#cardContent h1,
+#cardContent #kanji {
+    font-size: 64px !important;
+    margin: 5px 0 !important;
+}
+
+#cardContent h2 {
+    font-size: 23px !important;
+    margin: 5px 0 !important;
+}
+
+#cardContent h3 {
+    font-size: 16px !important;
+    margin: 5px 0 !important;
+}
+
+/* Tombol Previous, Flip, Next */
+#prevBtn,
+#flipBtn,
+#nextBtn {
+    padding: 9px 16px !important;
+    margin: 4px !important;
+}
+
+/* Bagian kuis */
+.quiz-section {
+    margin: 8px auto !important;
+    max-width: 450px !important;
+}
+
+.quiz-section h2 {
+    font-size: 16px !important;
+    margin-bottom: 8px !important;
+}
+
+/* Pilihan jawaban */
+.quiz-options {
+    gap: 7px !important;
+}
+
+.quiz-options .quiz-option {
+    min-height: 48px !important;
+    padding: 8px !important;
+    font-size: 20px !important;
+}
+
+/* Feedback jawaban */
+#quizFeedback {
+    margin-top: 6px !important;
+}
+
+/* Skor */
+#score {
+    margin-top: 5px !important;
+}
+
+/* Contoh kosakata setelah kartu dibalik */
+#cardContent hr {
+    margin: 7px 0 !important;
+}
+
+#cardContent > div {
+    margin: 5px 0 !important;
+}
+
+/* Bagian tambah kanji */
+#addBtn {
+    padding: 8px 14px !important;
+}
+
+/* Khusus layar laptop */
+@media screen and (max-height: 800px) {
+    .quiz-section {
+        margin: 5px auto !important;
+    }
+
+    #flashcard {
+        min-height: 155px !important;
+    }
+
+    #cardContent h1,
+    #cardContent #kanji {
+        font-size: 55px !important;
+    }
+}
